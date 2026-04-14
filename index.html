@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pandu Ka Sach!</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         body {
-            background-color: #000000;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            font-family: 'Segoe UI', sans-serif;
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -17,6 +19,7 @@
             height: 100vh;
             margin: 0;
         }
+
         .card {
             background: white;
             padding: 2.5rem;
@@ -29,10 +32,12 @@
             position: relative;
             z-index: 10;
         }
+
         #no-btn {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             z-index: 20;
         }
+
         .balloon {
             position: absolute;
             bottom: -100px;
@@ -41,22 +46,26 @@
             background: #3b82f6;
             border-radius: 50%;
             animation: floatUp 4s ease-in forwards;
-            z-index: 5;
         }
+
         @keyframes floatUp {
             to { transform: translateY(-120vh) rotate(20deg); }
         }
+
         .hidden { display: none; }
+
         .success-text {
             color: #1e40af;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 900;
             animation: bounce 1s infinite;
         }
+
         @keyframes bounce {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
+
         #timer-display {
             font-size: 0.9rem;
             color: #3b82f6;
@@ -65,118 +74,152 @@
             background: #dbeafe;
             padding: 5px 15px;
             border-radius: 20px;
-            display: inline-block;
         }
+
         .disabled-btn {
             opacity: 0.5;
             cursor: not-allowed !important;
         }
     </style>
 </head>
+
 <body>
 
-    <div id="main-card" class="card">
-        <div id="question-section">
-            <h1 class="text-2xl font-bold text-blue-800 mb-6 leading-relaxed">
-                Main <span class="text-pink-500 font-extrabold">Desigamergirl (Pandu)</span> bolta hun ki <span class="text-blue-600 underline">Zombie</span> mera BFF hain and baki saab mere dost hain.
-            </h1>
-            <div id="btn-container" class="flex justify-center gap-10 mt-10 h-20 relative">
-                <button id="yes-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-full shadow-lg transform active:scale-95 transition-all disabled-btn" disabled>YES</button>
-                <button id="no-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-10 rounded-full shadow-lg cursor-pointer disabled-btn" disabled>NO</button>
-            </div>
-            <p id="timer-display">Pura padh lo... (10s)</p>
+<div class="card">
+    <div id="question-section">
+        <h1 class="text-xl font-bold text-blue-800 mb-6">
+            Main <span class="text-pink-500 font-extrabold">Desigamergirl (Pandu)</span>
+            bolta hun ki <span class="text-blue-600 underline">Zombie</span>
+            mera BFF hain 😎
+        </h1>
+
+        <div class="flex justify-center gap-10 mt-10 h-20 relative">
+            <button id="yes-btn" class="bg-blue-600 text-white py-3 px-10 rounded-full disabled-btn" disabled>YES</button>
+            <button id="no-btn" class="bg-red-500 text-white py-3 px-10 rounded-full disabled-btn" disabled>NO</button>
         </div>
 
-        <div id="success-section" class="hidden">
-            <div class="text-6xl mb-4 animate-bounce">🥳🎉👑</div>
-            <h2 class="success-text">HAPPY BIRTHDAY DG!</h2>
-            <p class="text-blue-600 mt-4 text-xl font-bold italic">Zombie hi BFF hai, confirmed! 😎</p>
-            <div class="mt-8 flex justify-center gap-4">
-                <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-bold">Lucky Number: 11</span>
-                <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-bold">Color: Blue 💙</span>
-            </div>
-        </div>
+        <p id="timer-display">Pura padh lo... (10s)</p>
     </div>
 
-    <script>
-        const noBtn = document.getElementById('no-btn');
-        const yesBtn = document.getElementById('yes-btn');
-        const timerDisplay = document.getElementById('timer-display');
-        const questionSection = document.getElementById('question-section');
-        const successSection = document.getElementById('success-section');
-        
-        let noCount = 0;
-        let lastMouseX = 0;
-        let lastMouseY = 0;
-        let canInteract = false;
-        let currentSpeed = 0.3; 
+    <div id="success-section" class="hidden">
+        <div class="text-6xl">🥳🎉</div>
+        <h2 class="success-text">HAPPY BIRTHDAY DG!</h2>
+        <p class="text-blue-600 mt-3">Zombie hi BFF hai 😎</p>
+    </div>
+</div>
 
-        const messages = ["Maat karoo", "Heheh, Panduuuu", "Nahi hoga click!", "Koshish jaari rakho!", "Pakka Zombie hi hai!", "Speed badh rahi hai!", "Ab pakad ke dikhao!", "11 baar try kiya? 😂"];
+<script>
+const noBtn = document.getElementById('no-btn');
+const yesBtn = document.getElementById('yes-btn');
+const timerDisplay = document.getElementById('timer-display');
+const questionSection = document.getElementById('question-section');
+const successSection = document.getElementById('success-section');
 
-        let timeLeft = 10;
-        const timerInterval = setInterval(() => {
-            timeLeft--;
-            if (timeLeft > 0) {
-                timerDisplay.innerText = `Pura padh lo... (${timeLeft}s)`;
-            } else {
-                clearInterval(timerInterval);
-                timerDisplay.innerText = "Ab choose karo! 😉";
-                canInteract = true;
-                noBtn.classList.remove('disabled-btn');
-                yesBtn.classList.remove('disabled-btn');
-                noBtn.disabled = false;
-                yesBtn.disabled = false;
-            }
-        }, 1000);
+let noCount = 0;
+let lastX = 0;
+let lastY = 0;
+let canInteract = false;
+let speed = 0.3;
 
-        document.addEventListener('mousemove', (e) => {
-            lastMouseX = e.clientX;
-            lastMouseY = e.clientY;
-        });
+const messages = [
+    "Maat karoo 😭",
+    "Hehe Panduu 😂",
+    "Nahi hoga!",
+    "Try again 😏",
+    "Zombie hi hai!",
+    "Fast ho raha hu 😈"
+];
 
-        const moveButton = (isInitialClick = false) => {
-            if (!canInteract) return;
-            // Speed increases with every attempt
-            if (noCount > 0 && currentSpeed > 0.05) {
-                currentSpeed -= 0.025; 
-                noBtn.style.transition = `all ${currentSpeed}s cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
-            }
-            const minDistance = Math.min(250 + (noCount * 12), 450); 
-            let newX, newY, distance;
-            do {
-                newX = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40) + 20;
-                newY = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40) + 20;
-                distance = Math.sqrt(Math.pow(newX - lastMouseX, 2) + Math.pow(newY - lastMouseY, 2));
-            } while (distance < minDistance);
 
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = `${newX}px`;
-            noBtn.style.top = `${newY}px`;
-            
-            if (isInitialClick) { noBtn.innerText = messages[0]; noCount = 1; }
-            else { noBtn.innerText = messages[Math.min(noCount, messages.length - 1)]; noCount++; }
-        };
+// ⏱ TIMER
+let time = 10;
+const timer = setInterval(() => {
+    time--;
+    if (time > 0) {
+        timerDisplay.innerText = `Pura padh lo... (${time}s)`;
+    } else {
+        clearInterval(timer);
+        timerDisplay.innerText = "Ab choose karo 😉";
+        canInteract = true;
+        noBtn.disabled = false;
+        yesBtn.disabled = false;
+        noBtn.classList.remove('disabled-btn');
+        yesBtn.classList.remove('disabled-btn');
+    }
+}, 1000);
 
-        noBtn.addEventListener('click', () => { if (canInteract && noCount === 0) moveButton(true); });
-        noBtn.addEventListener('mouseover', () => { if (canInteract && noCount >= 1) moveButton(false); });
-        
-        yesBtn.addEventListener('click', () => {
-            if (!canInteract) return;
-            questionSection.classList.add('hidden');
-            successSection.classList.remove('hidden');
-            noBtn.style.display = 'none';
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-            for (let i = 0; i < 40; i++) {
-                setTimeout(() => {
-                    const b = document.createElement('div');
-                    b.className = 'balloon';
-                    b.style.left = Math.random() * 100 + 'vw';
-                    b.style.backgroundColor = i % 2 === 0 ? '#3b82f6' : '#60a5fa'; 
-                    document.body.appendChild(b);
-                    setTimeout(() => b.remove(), 4000);
-                }, i * 100);
-            }
-        });
-    </script>
+
+// 🖱 DESKTOP TRACK
+document.addEventListener('mousemove', (e) => {
+    lastX = e.clientX;
+    lastY = e.clientY;
+});
+
+// 📱 MOBILE TRACK
+document.addEventListener('touchmove', (e) => {
+    lastX = e.touches[0].clientX;
+    lastY = e.touches[0].clientY;
+});
+
+
+// 🧠 MOVE LOGIC
+function moveButton() {
+    if (!canInteract) return;
+
+    if (speed > 0.05) speed -= 0.02;
+
+    let x, y, dist;
+
+    do {
+        x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40) + 20;
+        y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40) + 20;
+
+        dist = Math.hypot(x - lastX, y - lastY);
+    } while (dist < 200);
+
+    // CLAMP (safe area)
+    x = Math.max(10, Math.min(x, window.innerWidth - noBtn.offsetWidth - 10));
+    y = Math.max(10, Math.min(y, window.innerHeight - noBtn.offsetHeight - 10));
+
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+
+    noBtn.innerText = messages[noCount % messages.length];
+    noCount++;
+}
+
+
+// 👇 BOTH desktop + mobile trigger
+noBtn.addEventListener('mouseover', moveButton);
+noBtn.addEventListener('touchstart', moveButton);
+
+
+// ✅ YES CLICK
+yesBtn.addEventListener('click', () => {
+    if (!canInteract) return;
+
+    questionSection.classList.add('hidden');
+    successSection.classList.remove('hidden');
+    noBtn.style.display = 'none';
+
+    confetti({
+        particleCount: 120,
+        spread: 70
+    });
+
+    // 🎈 balloons (optimized)
+    for (let i = 0; i < 25; i++) {
+        setTimeout(() => {
+            const b = document.createElement('div');
+            b.className = 'balloon';
+            b.style.left = Math.random() * 100 + 'vw';
+            document.body.appendChild(b);
+            setTimeout(() => b.remove(), 4000);
+        }, i * 120);
+    }
+});
+</script>
+
 </body>
 </html>
